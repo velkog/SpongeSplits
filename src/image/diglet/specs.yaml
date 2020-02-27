@@ -1,0 +1,13 @@
+model:
+  dimensions:
+    ROWS: 32
+    COLS: 44
+    COLOR: 3
+  
+  attributes:
+    EPOCHS: 25
+    INIT_LR: 0.001
+    BATCH_SIZE: 32
+
+  training:
+    TEST_SIZE: 0.1

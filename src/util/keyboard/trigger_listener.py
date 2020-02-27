@@ -13,9 +13,10 @@ class TriggerListener(keyboard.Listener):
     trigger key is pressed.
     """
 
-    def __init__(self, trigger_key, trigger_callback):
+    def __init__(self, trigger_key, trigger_callback, exit_callback=None):
         self.trigger_key = trigger_key
         self.trigger_callback = trigger_callback
+        self.exit_callback = exit_callback
         super(TriggerListener, self).__init__(on_press=self.on_press)
 
     def on_press(self, key):
@@ -23,4 +24,6 @@ class TriggerListener(keyboard.Listener):
             self.trigger_callback()
         # Close keyboard listener thread on escape
         if key == keyboard.Key.esc:
+            if self.exit_callback is not None:
+                self.exit_callback()
             return False
