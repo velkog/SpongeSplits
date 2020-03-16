@@ -5,7 +5,7 @@ route:
   - spatula: 1  # SpongeBob's Closet
   - spatula: 2  # Cowa-Bungee!
   - spatula: 3  # On Top of the Pineapple
-  - spatula: 4  # On Top of the Chum Bucket
+  # spatula: 4  # On Top of the Chum Bucket
   - spatula: 5  # A Wall Jump in the Bucket
   - spatula: 6  # Top of the Hill
   - spatula: 7  # Patrick's Dilemma

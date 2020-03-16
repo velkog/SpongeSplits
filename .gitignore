@@ -8,6 +8,5 @@ venv/
 **/__pycache__
 **/*.pyc
 tmp/
-lib/3.6/*
-lib/3.7/*
+autosplit/config/config.yaml
 autosplit/res/*
