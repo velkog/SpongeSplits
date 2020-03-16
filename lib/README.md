@@ -1,0 +1,3 @@
+Unfortunately for me, I needed to get this working for Windows which ended up being harder than one might've thought. To get all the different dependencies to work harmoniously, people recommeneded installing the [Unofficial Windows Binaries for Python](https://www.lfd.uci.edu/~gohlke/pythonlibs/)
+
+In the end, I was able to get all Pip-installed packages to work for the project using Python 3.6.8. My recomendation would be to use 3.6, however 3.7 **might work.** If you end up running into a DLL runtime error (on Windows), then I'd suggest to try installing these binaries. I'm keeping some of these binaries here for potential future use, but you'll likely want to download them and install for yourself from the [source](https://www.lfd.uci.edu/~gohlke/pythonlibs/).

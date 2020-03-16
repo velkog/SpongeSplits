@@ -1,0 +1,15 @@
+model:
+  dimensions:
+    ROWS: 32 # 40 # 32
+    COLS: 44 # 55 # 44
+    COLOR: 3
+  
+  attributes:
+    EPOCHS: 25 # 25
+    INIT_LR: 0.001
+    BATCH_SIZE: 20 # 32
+
+  training:
+    TEST_SIZE: 0.2
+
+path: "autosplit/res/three_sixty/"

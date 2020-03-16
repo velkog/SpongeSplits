@@ -1,0 +1,16 @@
+# Under route, for each split case, use the following format
+# - split-type: condition # Description
+route:
+  # Jellyfish Fields 1:
+  - spatula: 1  # SpongeBob's Closet
+  - spatula: 2  # Cowa-Bungee!
+  - spatula: 3  # On Top of the Pineapple
+  - spatula: 4  # On Top of the Chum Bucket
+  - spatula: 5  # A Wall Jump in the Bucket
+  - spatula: 6  # Top of the Hill
+  - spatula: 7  # Patrick's Dilemma
+
+  # SpongeBob's Dream 1:
+  - spatula: 8  # Across the Dreamscape
+  - spatula: 9  # Here You Go
+  - spatula: 10 # Super Bounce

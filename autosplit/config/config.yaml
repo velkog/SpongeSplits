@@ -1,0 +1,9 @@
+debug: True
+
+route:
+  # Jellyfish Fields 1:
+  - spatula: 1  # SpongeBob's Closet
+  - spatula: 2  # On Top of the Pineapple
+  - spatula: 3  # Cowa-Bungee!
+  # spatula: 4  # Top of the Hill
+  - spatula: 5  # Patrick's Dilemma

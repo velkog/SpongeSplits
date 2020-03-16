@@ -7,4 +7,7 @@ venv/
 **/.DS_Store
 **/__pycache__
 **/*.pyc
-dataset/*
+tmp/
+lib/3.6/*
+lib/3.7/*
+autosplit/res/*

@@ -1,0 +1,5 @@
+#!/usr/bin/env python3
+from os import system
+
+system('yapf --in-place --recursive --style=pep8 autosplit/ *.py')
+system('mypy autosplit/* --ignore-missing-imports')
