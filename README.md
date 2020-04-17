@@ -18,3 +18,4 @@ In the end, I was able to get all Pip-installed packages to work for the project
 * Add tests to this
 * Get larger dataset
 * Add typing :)
+* https://abseil.io/docs/python/quickstart for startup flags

@@ -24,6 +24,7 @@ class Prediction(NamedTuple):
     def build(cls, prediction: ndarray):
         label = prediction.argmax(axis=-1).flat[0]
         probability = prediction.flat[label]
+        # TODO: clean up this logic
         label = None if label == 11 else label
         return cls(label, probability * 100)
 
@@ -32,7 +33,7 @@ class CnnModel():
     def __init__(self, num_classes: int):
         model = Sequential()
         input_shape = self.__get_input_shape()
-        self.compile = False
+        self.compile = False  # TODO: fix this and actually save and load the model
 
         # Input layer
         model.add(Conv2D(32, (3, 3), padding="same", input_shape=input_shape))
@@ -67,9 +68,11 @@ class CnnModel():
 
     def compile_model(self, loss='binary_crossentropy'):
         self.compile = True
-        self.model.compile(loss='binary_crossentropy',
-                           optimizer=self.__get_optimizer(),
-                           metrics=['accuracy'])
+        self.model.compile(
+            loss='binary_crossentropy',
+            optimizer=self.__get_optimizer(),
+            metrics=['accuracy'],
+        )
 
     def fit_model(self, image_set):
         if self.compile == False:
@@ -86,8 +89,10 @@ class CnnModel():
 
     def predict(self, frame: SpongeFrame) -> Prediction:
         frame = frame.spatula_array
-        prediction = self.model.predict(frame,
-                                        batch_size=get_attr_batch_size())
+        prediction = self.model.predict(
+            frame,
+            batch_size=get_attr_batch_size(),
+        )
         return Prediction.build(prediction)
 
     @staticmethod

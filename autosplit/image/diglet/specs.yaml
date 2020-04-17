@@ -1,3 +1,5 @@
+datapath: "autosplit/res/original/"
+
 model:
   dimensions:
     ROWS: 32 # 40 # 32
@@ -11,5 +13,3 @@ model:
 
   training:
     TEST_SIZE: 0.2
-
-path: "autosplit/res/three_sixty/"

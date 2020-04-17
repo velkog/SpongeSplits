@@ -34,6 +34,10 @@ def get_attr_batch_size():
     return get_specs()['model']['attributes']['BATCH_SIZE']
 
 
+def get_datapath():
+    return get_specs()['datapath']
+
+
 # number of column pixels in images
 def get_num_cols():
     return get_specs()['model']['dimensions']['COLS']
@@ -52,7 +56,3 @@ def get_color_dim():
 # get test train split percentage
 def get_train_split():
     return get_specs()['model']['training']['TEST_SIZE']
-
-
-def get_path():
-    return get_specs()['path']

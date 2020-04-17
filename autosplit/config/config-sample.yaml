@@ -1,4 +1,22 @@
 debug: False
+datapath: "autosplit/res/original/"
+
+coordinates:
+  spatula:
+    x_0: 325
+    y_0: 45
+    x_1: 380
+    y_1: 90
+  sock:
+    x_0: 525
+    y_0: 380
+    x_1: 580
+    y_1: 425
+  textbox:
+    x_0: 70
+    y_0: 295
+    x_1: 570
+    y_1: 400
 
 # Under route, for each split case, use the following format
 # - split-type: condition # Description

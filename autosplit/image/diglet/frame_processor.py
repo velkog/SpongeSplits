@@ -11,7 +11,7 @@ from image.diglet.specifications import (
     get_color_dim,
     get_num_cols,
     get_num_rows,
-    get_path,
+    get_datapath,
 )
 
 
@@ -38,7 +38,7 @@ class FrameSet():
             # TODO: do we want to support multiple image formats?
             if not image_file.endswith('.jpg'):
                 continue
-            label = int(image_file.split('-')[1])
+            label = int(image_file.split('_')[1])
             full_frame = cv2.imread(image_file, get_color_dim())
             sponge_frame = SpongeFrame(full_frame)
 
@@ -52,7 +52,7 @@ class FrameSet():
         return data_x, data_y
 
     def __retrieve_dataset(self):
-        spatula_dataset_path = get_path() + 'spatula/'
+        spatula_dataset_path = get_datapath() + 'spatula/'
         list_of_images = []
 
         for filename in os.listdir(spatula_dataset_path):
