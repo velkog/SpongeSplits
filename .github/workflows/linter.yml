@@ -1,6 +1,6 @@
+---
 name: SpongeSplits Code Base Lint
 
-# Documentation: https://help.github.com/en/articles/workflow-syntax-for-github-actions
 on:
   pull_request:
     branches: [master]
