@@ -3,7 +3,7 @@ from keras.models import Sequential
 from keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 from numpy import ndarray
-from typing import NamedTuple
+from typing import NamedTuple, List
 
 from image.frame import SpongeFrame
 from image.diglet.specifications import (
@@ -25,7 +25,7 @@ class Prediction(NamedTuple):
         label = prediction.argmax(axis=-1).flat[0]
         probability = prediction.flat[label]
         # TODO: clean up this logic
-        label = None if label == 11 else label
+        label = None if label == 83 else label
         return cls(label, probability * 100)
 
 
@@ -36,12 +36,13 @@ class CnnModel():
         self.compile = False  # TODO: fix this and actually save and load the model
 
         # Input layer
-        model.add(Conv2D(32, (3, 3), padding="same", input_shape=input_shape))
+        num_filters = get_num_cols() * get_num_rows() * 3
+        model.add(Conv2D(64, (3, 3), padding="same", input_shape=input_shape))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         # Convolutional layer
-        model.add(Conv2D(32, (3, 3)))
+        model.add(Conv2D(8, (3, 3)))
         model.add(Activation('relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
@@ -54,6 +55,7 @@ class CnnModel():
         model.add(Dense(num_classes))
         model.add(Activation("softmax"))
 
+        print(model.summary())
         self.model = model
 
     def __get_input_shape(self):
@@ -87,13 +89,19 @@ class CnnModel():
             epochs=get_attr_epochs(),
             verbose=1)
 
+    # TODO: returning a list here is dumb
     def predict(self, frame: SpongeFrame) -> Prediction:
-        frame = frame.spatula_array
-        prediction = self.model.predict(
-            frame,
+        spatula = frame.spatula_array
+        spatula_prediction = self.model.predict(
+            spatula,
             batch_size=get_attr_batch_size(),
         )
-        return Prediction.build(prediction)
+        # sock = frame.sock_array(375, 525)
+        # sock_prediction = self.model.predict(
+        #     sock,
+        #     batch_size=get_attr_batch_size(),
+        # )
+        return Prediction.build(spatula_prediction)
 
     @staticmethod
     def gen_model():

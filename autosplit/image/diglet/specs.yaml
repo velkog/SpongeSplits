@@ -7,7 +7,7 @@ model:
     COLOR: 3
   
   attributes:
-    EPOCHS: 25 # 25
+    EPOCHS: 1 # 25
     INIT_LR: 0.001
     BATCH_SIZE: 20 # 32
 

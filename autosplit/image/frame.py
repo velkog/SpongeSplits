@@ -14,7 +14,11 @@ class SpongeFrame():
         spatula = img_to_array(spatula)
         self.spatula = resize(spatula, (get_num_cols(), get_num_rows()),
                               interpolation=INTER_CUBIC)
-        self.sock = frame[380:420, 530:585]
+        self.sock = frame
+        # sock = frame[380:420, 530:585]
+        # sock = img_to_array(sock)
+        # self.sock = resize(sock, (get_num_cols(), get_num_rows()),
+        #                    interpolation=INTER_CUBIC)
 
     def save_frame(self, file_name):
         imwrite(file_name, self.frame)
@@ -22,6 +26,19 @@ class SpongeFrame():
     @property
     def spatula_array(self) -> ndarray:
         return array([self.spatula], dtype='float') / 255.0
+
+    # @property
+    def sock_array(self, x, y) -> ndarray:
+        x1 = x
+        x2 = x + 50
+        y1 = y
+        y2 = y + 55
+        socky = self.sock[x1:x2, y1:y2]
+        socky = img_to_array(socky)
+        socky = resize(socky, (get_num_cols(), get_num_rows()),
+                       interpolation=INTER_CUBIC)
+
+        return array([socky], dtype='float') / 255.0
 
     @property
     def spatula_img(self):

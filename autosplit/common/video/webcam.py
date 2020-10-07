@@ -71,5 +71,5 @@ class Webcam(Thread):
     def get_frame(self):
         return self.frame
 
-    def set_states(self, states: List[Identity]):
+    def set_states(self, states: List[Identity]) -> None:
         self.states = states

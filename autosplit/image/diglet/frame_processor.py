@@ -15,6 +15,7 @@ from image.diglet.specifications import (
 )
 
 
+# TODO: Rename this file to something more logical, maybe even rework the structure.
 class FrameSet():
     def __init__(self):
         self.class_labels = set()
@@ -35,10 +36,9 @@ class FrameSet():
         list_of_images = self.__retrieve_dataset()
 
         for image_file in list_of_images:
-            # TODO: do we want to support multiple image formats?
-            if not image_file.endswith('.jpg'):
-                continue
             label = int(image_file.split('_')[1])
+            if label == 101 or label == 102:
+                label = 83
             full_frame = cv2.imread(image_file, get_color_dim())
             sponge_frame = SpongeFrame(full_frame)
 
@@ -56,6 +56,7 @@ class FrameSet():
         list_of_images = []
 
         for filename in os.listdir(spatula_dataset_path):
+            # TODO: do we want to support multiple image formats?
             if filename.endswith('.jpg'):
                 list_of_images.append('%s%s' %
                                       (spatula_dataset_path, filename))

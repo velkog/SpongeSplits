@@ -9,7 +9,7 @@ from config import DEBUG, get_route
 from image.frame import SpongeFrame
 from image.frame_buffer import FrameBuffer
 from image.diglet.model import Prediction
-from util.buffer_worker import BufferConsumer, BufferProducer
+from util.frame_processor import FrameProcessor
 from util.display import InformationDisplay
 
 
@@ -21,18 +21,17 @@ class AutoSplit():
     sock_count = 0
 
     def __init__(self) -> None:
-        self.debug = DEBUG
         self.livesplit = LiveSplitSignal()
         self.route = get_route()
         self.stop_threads = False
+        self.display = InformationDisplay()
 
         self._start_listener()
         self._start_webcam()
         self._start_buffers()
+        self.display.start()
 
-        self.display = InformationDisplay()
-        self.buffer_cons.join()
-        self.buffer_prod.join()
+        self.frame_processor.join()
         self.trigger_listener.join()
         self.display.clean()
 
@@ -40,27 +39,14 @@ class AutoSplit():
         self.stop_threads = True
 
     def _start_buffers(self) -> None:
-        frame_buffer = FrameBuffer()
-        frame_buff_lock = Lock()
-
-        self.buffer_cons: BufferConsumer = BufferConsumer(
+        self.frame_processor: FrameProcessor = FrameProcessor(
             args=(lambda: self.stop_threads, ),
-            callback=self._trigger_callback,
-            debug=self.debug,
-            frame_buffer=frame_buffer,
-            lock=frame_buff_lock,
-            webcam=self.webcam,
-        )
-        self.buffer_prod: BufferProducer = BufferProducer(
-            args=(lambda: self.stop_threads, ),
-            debug=self.debug,
-            frame_buffer=frame_buffer,
-            lock=frame_buff_lock,
+            callback=self.__trigger_callback,
+            display=self.display,
             webcam=self.webcam,
         )
 
-        self.buffer_cons.start()
-        self.buffer_prod.start()
+        self.frame_processor.start()
 
     def _start_listener(self) -> None:
         self.trigger_listener = TriggerListener(
@@ -73,23 +59,16 @@ class AutoSplit():
     def _start_webcam(self) -> None:
         self.webcam = Webcam(input=0,
                              args=(lambda: self.stop_threads, ),
-                             debug=self.debug)
+                             debug=DEBUG)
         self.webcam.start()
 
-    def _trigger_callback(self, prediction: Prediction) -> None:
-        if self.debug: # TODO: move debug to curses logic or something like that
-            self.display.set_prediction(prediction)
-            
-        # Ignore prediction, unless it's the next logical increment
-        # TODO: this could result in a deadlock, add a retry count, so
-        #       if the counter gets out of sync, we can recover
-        if prediction.label == self.spatula_count + 1:
-            self.spatula_count += 1
-        else:
-            return
+    def __trigger_callback(self, spatula_prediction: Prediction) -> None:
+        self.display.set_prediction(spatula_prediction)
 
-        if self.route[0]["spatula"] == self.spatula_count:
-            # self.livesplit.split()
+        split_name, split_value = next(iter(self.route[0].items()))
+        if split_value == spatula_prediction.label:
+            self.display.log(f"Split action occured for '{split_name}'")
+            self.livesplit.split()
             self.route.pop(0)
 
 
