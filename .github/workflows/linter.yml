@@ -2,6 +2,8 @@
 name: SpongeSplits Code Base Lint
 
 on:
+  push:
+    branches-ignore: [master]
   pull_request:
     branches: [master]
 
