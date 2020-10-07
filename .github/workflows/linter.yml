@@ -10,7 +10,7 @@ on:
 jobs:
   build:
     name: SpongeSplits Code Base Lint
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code
