@@ -13,7 +13,7 @@ from config import Identity
 
 EXIT = False
 EXIT_LAMBDA = (lambda: EXIT, )
-WEBCAM = Webcam(args=EXIT_LAMBDA, debug=True, input=0, states=[Identity.ALL])
+WEBCAM = Webcam(args=EXIT_LAMBDA, debug=True, input=3, states=[Identity.ALL])
 WEBCAM.start()
 
 input("Hit enter to exit. ")

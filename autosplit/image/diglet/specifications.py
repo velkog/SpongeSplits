@@ -38,6 +38,7 @@ def get_datapath():
     return get_specs()['datapath']
 
 
+# TODO: rename these functions to be more specific
 # number of column pixels in images
 def get_num_cols():
     return get_specs()['model']['dimensions']['COLS']
