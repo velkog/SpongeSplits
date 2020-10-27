@@ -20,4 +20,3 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         VALIDATE_TERRAFORM_TERRASCAN: false
-
