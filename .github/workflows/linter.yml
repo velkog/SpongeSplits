@@ -20,7 +20,7 @@ on:
     # Remove the line above to run when pushing to master
   pull_request:
     branches: [master]
-
+    
 ###############
 # Set the Job #
 ###############
@@ -30,7 +30,7 @@ jobs:
     name: Lint Code Base
     # Set the agent to run on
     runs-on: ubuntu-latest
-
+    
     ##################
     # Load all steps #
     ##################
@@ -40,7 +40,7 @@ jobs:
       ##########################
       - name: Checkout Code
         uses: actions/checkout@v2
-
+        
       ################################
       # Run Linter against code base #
       ################################
@@ -50,3 +50,4 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
