@@ -21,7 +21,7 @@ def get_config() -> Optional[Dict[str, Any]]:
     if CONFIG:
         return CONFIG
 
-    with open(CONFIG_PATH, 'r') as stream:
+    with open(CONFIG_PATH, "r") as stream:
         try:
             CONFIG = safe_load(stream)
             return CONFIG

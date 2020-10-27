@@ -29,7 +29,7 @@ class Prediction(NamedTuple):
         return cls(label, probability * 100)
 
 
-class CnnModel():
+class CnnModel:
     def __init__(self, num_classes: int):
         model = Sequential()
         input_shape = self.__get_input_shape()
@@ -38,12 +38,12 @@ class CnnModel():
         # Input layer
         num_filters = get_num_cols() * get_num_rows() * 3
         model.add(Conv2D(64, (3, 3), padding="same", input_shape=input_shape))
-        model.add(Activation('relu'))
+        model.add(Activation("relu"))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         # Convolutional layer
         model.add(Conv2D(8, (3, 3)))
-        model.add(Activation('relu'))
+        model.add(Activation("relu"))
         model.add(MaxPooling2D(pool_size=(2, 2)))
 
         # Flatten
@@ -68,12 +68,12 @@ class CnnModel():
         # TODO: save model to be loaded later
         return
 
-    def compile_model(self, loss='binary_crossentropy'):
+    def compile_model(self, loss="binary_crossentropy"):
         self.compile = True
         self.model.compile(
-            loss='binary_crossentropy',
+            loss="binary_crossentropy",
             optimizer=self.__get_optimizer(),
-            metrics=['accuracy'],
+            metrics=["accuracy"],
         )
 
     def fit_model(self, image_set):
@@ -81,20 +81,22 @@ class CnnModel():
             self.compile_model()
         train_x, train_y, val_x, val_y = image_set.get_dataset()
         self.model.fit_generator(
-            ImageDataGenerator().flow(train_x,
-                                      train_y,
-                                      batch_size=get_attr_batch_size()),
+            ImageDataGenerator().flow(
+                train_x,
+                train_y,
+                batch_size=get_attr_batch_size()
+            ),
             validation_data=(val_x, val_y),
             steps_per_epoch=len(train_x) // get_attr_batch_size(),
             epochs=get_attr_epochs(),
-            verbose=1)
+            verbose=1,
+        )
 
     # TODO: returning a list here is dumb
     def predict(self, frame: SpongeFrame) -> Prediction:
         spatula = frame.spatula_array
         spatula_prediction = self.model.predict(
-            spatula,
-            batch_size=get_attr_batch_size(),
+            spatula, batch_size=get_attr_batch_size(),
         )
         # sock = frame.sock_array(375, 525)
         # sock_prediction = self.model.predict(
@@ -105,5 +107,5 @@ class CnnModel():
 
     @staticmethod
     def gen_model():
-        #TODO: load saved cnn model
+        # TODO: load saved cnn model
         return None

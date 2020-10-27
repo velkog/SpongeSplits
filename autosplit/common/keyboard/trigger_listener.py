@@ -12,6 +12,7 @@ class TriggerListener(keyboard.Listener):
     :param function trigger_callback: Specify the callback when the specified
     trigger key is pressed.
     """
+    
     def __init__(self, trigger_key, trigger_callback=None, exit_callback=None):
         self.trigger_key = trigger_key
         self.trigger_callback = trigger_callback
