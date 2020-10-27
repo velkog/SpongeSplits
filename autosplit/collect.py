@@ -53,7 +53,7 @@ class BaseDataCollector:
         self._trigger_listener = TriggerListener(
             KeyCode.from_char("\\"), self._trigger_callback, self._exit_callback
         )
-         self._trigger_listener.start()
+        self._trigger_listener.start()
 
     def _trigger_callback(self):
         pass
