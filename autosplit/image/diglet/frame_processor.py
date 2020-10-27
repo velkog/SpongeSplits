@@ -26,8 +26,8 @@ class FrameSet:
         self.train_x, self.val_x, self.train_y, self.val_y = train_test_split(
             data_x, data_y, test_size=get_train_split()
         )
-
-       self.train_y = to_categorical(self.train_y, num_classes=len(self.class_labels))
+        
+        self.train_y = to_categorical(self.train_y, num_classes=len(self.class_labels))
         self.val_y = to_categorical(self.val_y, num_classes=len(self.class_labels))
 
     def __process_images(self):

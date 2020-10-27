@@ -8,7 +8,8 @@ def validate_int(
 ) -> int:
     try:
         int_input = int(user_input)
-        if int_input < range_min or (range_max is not None and int_input > range_max):            raise OutOfRangeOptionException(option=user_input)
+        if int_input < range_min or (range_max is not None and int_input > range_max):
+            raise OutOfRangeOptionException(option=user_input)
         return int_input
     except ValueError:
         raise InvalidOptionException(option=user_input)

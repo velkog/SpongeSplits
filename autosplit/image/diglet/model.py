@@ -82,9 +82,7 @@ class CnnModel:
         train_x, train_y, val_x, val_y = image_set.get_dataset()
         self.model.fit_generator(
             ImageDataGenerator().flow(
-                train_x,
-                train_y,
-                batch_size=get_attr_batch_size()
+                train_x, train_y, batch_size=get_attr_batch_size()
             ),
             validation_data=(val_x, val_y),
             steps_per_epoch=len(train_x) // get_attr_batch_size(),
