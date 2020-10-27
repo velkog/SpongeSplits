@@ -1,4 +1,4 @@
-<h1> <img src="res/SpongeSplits.png" alt="LiveSplit" height="40" width="40" align="top"/> SpongeSplits</h1>
+<h1> <img src="res/SpongeSplits.png" alt="LiveSplit" height="45" width="42" align="top"/> SpongeSplits</h1>
 
 [![GitHub License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/velkog/SpongeSplits/master/LICENSE)
 [![GitHub Super-Linter](https://github.com/velkog/SpongeSplits/workflows/Lint%20Code%20Base/badge.svg)](https://github.com/marketplace/actions/super-linter)
