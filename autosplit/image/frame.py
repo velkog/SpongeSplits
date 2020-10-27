@@ -6,7 +6,7 @@ from numpy import array, ndarray
 from image.diglet.specifications import get_num_cols, get_num_rows
 
 
-class SpongeFrame():
+class SpongeFrame:
     def __init__(self, frame):
         # TODO: move these into the config
         self.frame = frame

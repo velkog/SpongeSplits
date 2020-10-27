@@ -81,9 +81,6 @@ if __name__ == "__main__":
             count = validate_int(input("Enter starting count: "))
 
             if selection == 1:
-                SingleFrameDataCollector(count=count,
-                                         label_prefix=label_prefix,
-                                         webcam=WEBCAM)
                 SingleFrameDataCollector(
                     count=count, label_prefix=label_prefix, webcam=WEBCAM
                 )
