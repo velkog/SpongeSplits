@@ -3,7 +3,7 @@ from typing import List, Optional
 from image.frame import SpongeFrame
 
 
-class FrameBuffer():
+class FrameBuffer:
     def __init__(self) -> None:
         self.paused: bool = False
         self.frame_buffer: List[SpongeFrame] = []

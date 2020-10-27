@@ -15,7 +15,7 @@ from image.frame import SpongeFrame
 # TODO: This isn't the cleanest and I don't really this it'll be worth cleaning this up
 DATASET_PATH = get_datapath()
 EXIT = False
-EXIT_LAMBDA = (lambda: EXIT, )
+EXIT_LAMBDA = (lambda: EXIT,)
 OPTIONS: List[str] = ["Save a single frame when trigger is pressed", "Exit"]
 WEBCAM: Webcam
 
@@ -39,8 +39,7 @@ class BaseDataCollector:
         pass
 
     def _get_filename(self):
-        return "%s%s_%d.jpg" % (self._directory, self._label_prefix,
-                                self._count)
+        return "%s%s_%d.jpg" % (self._directory, self._label_prefix, self._count)
 
     def _save_frame(self):
         frame = self._webcam.get_frame()
@@ -51,9 +50,9 @@ class BaseDataCollector:
             self._count += 1
 
     def _start_listener(self):
-        self._trigger_listener = TriggerListener(KeyCode.from_char('\\'),
-                                                 self._trigger_callback,
-                                                 self._exit_callback)
+        self._trigger_listener = TriggerListener(
+            KeyCode.from_char("\\"), self._trigger_callback, self._exit_callback
+        )
         self._trigger_listener.start()
 
     def _trigger_callback(self):
@@ -65,28 +64,26 @@ class SingleFrameDataCollector(BaseDataCollector):
         self._save_frame()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     WEBCAM = Webcam(args=EXIT_LAMBDA, input=0, debug=True)
     WEBCAM.start()
 
     while True:
-        print('Select a collection mode:')
+        print("Select a collection mode:")
         for count, option in enumerate(OPTIONS, start=1):
             print("%s. %s" % (count, option))
 
         try:
-            selection = validate_int(input(),
-                                     range_min=1,
-                                     range_max=len(OPTIONS))
+            selection = validate_int(input(), range_min=1, range_max=len(OPTIONS))
             if selection == len(OPTIONS):
                 break
             label_prefix = input("Enter desired title prefix: ")
             count = validate_int(input("Enter starting count: "))
 
             if selection == 1:
-                SingleFrameDataCollector(count=count,
-                                         label_prefix=label_prefix,
-                                         webcam=WEBCAM)
+                SingleFrameDataCollector(
+                    count=count, label_prefix=label_prefix, webcam=WEBCAM
+                )
 
         except InvalidOptionException as e:
             report(e)

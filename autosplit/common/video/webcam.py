@@ -21,15 +21,11 @@ from config import (
 
 
 class Webcam(Thread):
-    window_name = 'Video Stream'
+    window_name = "Video Stream"
     key_escape = 27
     exit_flag = False
 
-    def __init__(self,
-                 args,
-                 debug=False,
-                 input=0,
-                 states: List[Identity] = []):
+    def __init__(self, args, debug=False, input=0, states: List[Identity] = []):
         self.debug = debug
         self.frame = None
         self.input = input

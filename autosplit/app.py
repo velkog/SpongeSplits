@@ -16,7 +16,7 @@ from util.display import InformationDisplay
 # TODO: in hindsight, this class should probably inherit from trigger_listener,
 # but I have a feeling that would require a ton of work, and I might want to get
 # rid of the trigger listener class all together
-class AutoSplit():
+class AutoSplit:
     spatula_count = 0
     sock_count = 0
 
@@ -40,7 +40,7 @@ class AutoSplit():
 
     def _start_buffers(self) -> None:
         self.frame_processor: FrameProcessor = FrameProcessor(
-            args=(lambda: self.stop_threads, ),
+            args=(lambda: self.stop_threads,),
             callback=self.__trigger_callback,
             display=self.display,
             webcam=self.webcam,
@@ -50,16 +50,14 @@ class AutoSplit():
 
     def _start_listener(self) -> None:
         self.trigger_listener = TriggerListener(
-            KeyCode.from_char('\\'),
+            KeyCode.from_char("\\"),
             trigger_callback=None,
             exit_callback=self._exit_callback,
         )
         self.trigger_listener.start()
 
     def _start_webcam(self) -> None:
-        self.webcam = Webcam(input=0,
-                             args=(lambda: self.stop_threads, ),
-                             debug=DEBUG)
+        self.webcam = Webcam(input=0, args=(lambda: self.stop_threads,), debug=DEBUG)
         self.webcam.start()
 
     def __trigger_callback(self, spatula_prediction: Prediction) -> None:
@@ -72,5 +70,5 @@ class AutoSplit():
             self.route.pop(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     autosplit = AutoSplit()
