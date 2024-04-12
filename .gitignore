@@ -39,6 +39,7 @@
 /.vscode/
 /bazel-*
 /bazel.iml
+/external
 /output/
 /production
 compile_commands.json
