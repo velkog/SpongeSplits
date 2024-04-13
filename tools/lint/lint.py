@@ -8,6 +8,8 @@ from argparse import ArgumentParser, Namespace
 from shutil import which
 from sys import exit
 
+from tools.print import print_error
+
 def parse_args() -> None:
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -26,7 +28,7 @@ def main() -> None:
         args = parse_args()
         validate_args(args)
     except Exception as e:
-        print(e)
+        print_error(e)
         raise e
 
 if __name__ == '__main__':

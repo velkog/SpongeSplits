@@ -6,5 +6,8 @@ py_binary(
     main = "lint.py",
     args = [
         "--lint-executable='clang-format'",
-    ]
+    ],
+    deps = [
+        "//tools:print",
+    ],
 )
