@@ -1,3 +1,7 @@
+LINT_PATHS = [
+    ".",
+]
+
 py_binary(
     name = "clang_format",
     srcs = [
@@ -6,7 +10,8 @@ py_binary(
     main = "lint.py",
     args = [
         "--lint-executable='clang-format'",
-    ],
+        "--language='cpp'"
+    ] + LINT_PATHS,
     deps = [
         "//tools:print",
     ],
