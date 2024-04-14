@@ -7,6 +7,7 @@ across multiple files and to use for continuous integration.
 from argparse import ArgumentParser, Namespace
 from collections.abc import Callable
 from difflib import unified_diff
+from enum import Enum
 from fnmatch import fnmatch
 from functools import partial
 from io import open
@@ -98,6 +99,13 @@ class LintFile:
             tofile=f"{self.file}\treformatted",
         )
     
+class StatusCode(Enum):
+    OK = 0
+    GENERIC_ERROR = 1
+
+    @classmethod
+    def compare(cls, a: "StatusCode", b: "StatusCode") -> "StatusCode":
+        return a if a.value > b.value else b
 
 def parse_args() -> None:
     parser = ArgumentParser(description=__doc__)
@@ -158,7 +166,7 @@ def get_paths_files(paths: List[str], language: str) -> List[str]:
 
 def run_lint(exc: str, file: str) -> LintFile:
     lint_file = LintFile(file)
-    lint_file.run_lint(exc)
+    status = lint_file.run_lint(exc)
     return lint_file
 
 def run(exc: str, language: str, paths: List[str]) -> List[LintFile]:
@@ -169,16 +177,24 @@ def run(exc: str, language: str, paths: List[str]) -> List[LintFile]:
         linted_files = [file for file in pool.imap_unordered(partial(run_lint, exc), files)]
     return linted_files
 
-def report(linted_files: List[LintFile]) -> None:
+def report(linted_files: List[LintFile]) -> StatusCode:
+    status = StatusCode.OK
     for file in linted_files:
-        print_diff(file.get_diff())
+        diff = file.get_diff()
+        print_diff(diff)
 
-def main() -> None:
+        new_status = StatusCode.GENERIC_ERROR if diff else StatusCode.OK
+        status = StatusCode.compare(status, new_status)
+        
+    return status
+
+def main() -> StatusCode:
     try:
         args = parse_args()
         validate_args(args)
         linted_files = run(args.lint_executable, args.language, args.paths)
-        report(linted_files)
+        status = report(linted_files)
+        return status.value
 
     except Exception as e:
         print_error(e)
