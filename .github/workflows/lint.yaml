@@ -1,5 +1,5 @@
 name: Code Lint
-run-name: Lint evaluation for ${{ vars.GITHUB_SHA }}
+run-name: Lint evaluation on ${{ github.ref }} with ${{ github.sha }}
 
 on:
   pull_request:
