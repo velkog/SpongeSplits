@@ -1,8 +1,8 @@
-from typing import Generator
+from typing import List
 
 from termcolor import colored, cprint
 
-def print_diff(diff: Generator[str, None, None]) -> None:
+def print_diff(diff: List[str]) -> None:
     for diff_line in diff:
         if diff_line[:4] in ['--- ', '+++ ']:
             print(colored(diff_line, attrs=["bold"]))

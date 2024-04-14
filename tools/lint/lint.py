@@ -70,8 +70,12 @@ class LintFile:
                 raise ValueError(f"File '{self.file}' must be linted before calling '{func.__name__}'.")
         return wrapper
 
-    def run_lint(self, exc: str) -> None:
+    def run_lint(self, exc: str, in_place: bool) -> None:
         command = [exc, self.file]
+
+        if in_place:
+            command.append("-i")
+
         proc = Popen(
             command,
             stdout=PIPE,
@@ -86,7 +90,12 @@ class LintFile:
                 err_str += "\n" + err
             raise SystemError(err_str)
 
-        self.reformatted = list(proc.stdout.readlines())
+        if in_place:
+            with open(self.file, "r", encoding="utf-8") as f:
+                self.reformatted = f.readlines()
+        else:
+            self.reformatted = list(proc.stdout.readlines())
+
         self.errs = list(proc.stderr.readlines())
         self.is_linted: bool = True
 
@@ -109,17 +118,22 @@ class StatusCode(Enum):
 
 def parse_args() -> None:
     parser = ArgumentParser(description=__doc__)
-    parser.add_argument("paths", metavar="path", nargs="+")
     parser.add_argument(
-        "--lint-executable",
-        metavar="EXECUTABLE",
-        help="path to the lint executable",
-        required=True)
+        "--in-place",
+        "-i",
+        action="store_true",
+        help="Format file instead of printing differences")
     parser.add_argument(
         "--language",
         help="Language for seleceting file extensions",
         choices=Languages.get_all_options(),
         required=True)
+    parser.add_argument(
+        "--lint-executable",
+        metavar="EXECUTABLE",
+        help="path to the lint executable",
+        required=True)
+    parser.add_argument("paths", metavar="path", nargs="+")
     return parser.parse_args()
 
 def validate_args(args: Namespace) -> None:
@@ -164,23 +178,23 @@ def get_paths_files(paths: List[str], language: str) -> List[str]:
         
     return files
 
-def run_lint(exc: str, file: str) -> LintFile:
+def run_lint(exc: str, in_place: bool, file: str) -> LintFile:
     lint_file = LintFile(file)
-    status = lint_file.run_lint(exc)
+    status = lint_file.run_lint(exc, in_place)
     return lint_file
 
-def run(exc: str, language: str, paths: List[str]) -> List[LintFile]:
+def run(exc: str, language: str, in_place: bool, paths: List[str]) -> List[LintFile]:
     files = get_paths_files(paths, language)
     num_pools = min(cpu_count() + 1, len(files))
 
     with Pool(num_pools) as pool:
-        linted_files = [file for file in pool.imap_unordered(partial(run_lint, exc), files)]
+        linted_files = [file for file in pool.imap_unordered(partial(run_lint, exc, in_place), files)]
     return linted_files
 
 def report(linted_files: List[LintFile]) -> StatusCode:
     status = StatusCode.OK
     for file in linted_files:
-        diff = file.get_diff()
+        diff = [f for f in file.get_diff()]
         print_diff(diff)
 
         new_status = StatusCode.GENERIC_ERROR if diff else StatusCode.OK
@@ -192,7 +206,7 @@ def main() -> StatusCode:
     try:
         args = parse_args()
         validate_args(args)
-        linted_files = run(args.lint_executable, args.language, args.paths)
+        linted_files = run(args.lint_executable, args.language, args.in_place, args.paths)
         status = report(linted_files)
         return status.value
 

@@ -10,7 +10,7 @@ py_binary(
     main = "lint.py",
     args = [
         "--lint-executable='clang-format'",
-        "--language='cpp'"
+        "--language='cpp'",
     ] + LINT_PATHS,
     deps = [
         "//tools:print",
