@@ -1,5 +1,5 @@
-name: Code Lint
-run-name: Lint evaluation on ${{ github.ref }} with ${{ github.sha }}
+name: Code Format Check
+run-name: Format evaluation on ${{ github.ref }} with ${{ github.sha }}
 
 on:
   pull_request:
@@ -22,5 +22,5 @@ jobs:
           path: "~/.cache/bazel"
           key: bazel
 
-      - name: Run lint
-        run: bazel run //tools/lint:clang_format
+      - name: Run format check
+        run: bazel run //tools/format:clang_format
