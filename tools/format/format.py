@@ -22,6 +22,7 @@ from tools.print import print_diff, print_error
 
 WORKING_DIR = environ["BUILD_WORKING_DIRECTORY"]
 
+
 class Languages:
     CPP = "cpp"
 
@@ -51,6 +52,7 @@ LANGUAGE_EXTENSIONS = {
     ]
 }
 
+
 class FormatFile:
     errs: Optional[List[str]] = None
     is_formatted: bool = False
@@ -68,6 +70,7 @@ class FormatFile:
                 return func(self, *args, **kwargs)
             else:
                 raise ValueError(f"File '{self.file}' must be formatted before calling '{func.__name__}'.")
+
         return wrapper
 
     def run_format(self, exc: str, in_place: bool) -> None:
@@ -107,7 +110,8 @@ class FormatFile:
             fromfile=f"{self.file}\toriginal",
             tofile=f"{self.file}\treformatted",
         )
-    
+
+
 class StatusCode(Enum):
     OK = 0
     GENERIC_ERROR = 1
@@ -116,34 +120,40 @@ class StatusCode(Enum):
     def compare(cls, a: "StatusCode", b: "StatusCode") -> "StatusCode":
         return a if a.value > b.value else b
 
+
 def parse_args() -> None:
     parser = ArgumentParser(description=__doc__)
     parser.add_argument(
         "--in-place",
         "-i",
         action="store_true",
-        help="Format file instead of printing differences")
+        help="Format file instead of printing differences",
+    )
     parser.add_argument(
         "--language",
         help="Language for seleceting file extensions",
         choices=Languages.get_all_options(),
-        required=True)
+        required=True,
+    )
     parser.add_argument(
         "--format-executable",
         metavar="EXECUTABLE",
         help="path to the format executable",
-        required=True)
+        required=True,
+    )
     parser.add_argument("paths", metavar="path", nargs="+")
     return parser.parse_args()
+
 
 def validate_args(args: Namespace) -> None:
     if not which(args.format_executable):
         raise NameError(f"Given executable '{args.format_executable}' does not exist.")
-    
+
     for files_path in args.paths:
         full_path = path.join(WORKING_DIR, files_path)
         if not path.exists(full_path):
             raise NameError(f"Given path '{full_path}' does not exist.")
+
 
 def get_paths_files(paths: List[str], language: str) -> List[str]:
     extensions = set(LANGUAGE_EXTENSIONS[language])
@@ -152,7 +162,7 @@ def get_paths_files(paths: List[str], language: str) -> List[str]:
     files = []
     for files_path in paths:
         full_path = path.join(WORKING_DIR, files_path)
-        
+
         if not path.isdir(full_path):
             files.append(full_path)
             continue
@@ -163,25 +173,21 @@ def get_paths_files(paths: List[str], language: str) -> List[str]:
                 # os.walk() supports trimming down the dnames list
                 # by modifying it in-place,
                 # to avoid unnecessary directory listings.
-                dnames[:] = [
-                    x for x in dnames
-                    if
-                    not fnmatch.fnmatch(path.join(dirpath, x), pattern)
-                ]
-                fpaths = [
-                    x for x in fpaths if not fnmatch.fnmatch(x, pattern)
-                ]
+                dnames[:] = [x for x in dnames if not fnmatch.fnmatch(path.join(dirpath, x), pattern)]
+                fpaths = [x for x in fpaths if not fnmatch.fnmatch(x, pattern)]
             for f in fpaths:
                 ext = path.splitext(f)[1][1:]
                 if ext.lower() in extensions:
                     files.append(f)
-        
+
     return files
+
 
 def run_format(exc: str, in_place: bool, file: str) -> FormatFile:
     format_file = FormatFile(file)
     status = format_file.run_format(exc, in_place)
     return format_file
+
 
 def run(exc: str, language: str, in_place: bool, paths: List[str]) -> List[FormatFile]:
     files = get_paths_files(paths, language)
@@ -191,6 +197,7 @@ def run(exc: str, language: str, in_place: bool, paths: List[str]) -> List[Forma
         formatted_files = [file for file in pool.imap_unordered(partial(run_format, exc, in_place), files)]
     return formatted_files
 
+
 def report(formatted_files: List[FormatFile]) -> StatusCode:
     status = StatusCode.OK
     for file in formatted_files:
@@ -199,8 +206,9 @@ def report(formatted_files: List[FormatFile]) -> StatusCode:
 
         new_status = StatusCode.GENERIC_ERROR if diff else StatusCode.OK
         status = StatusCode.compare(status, new_status)
-        
+
     return status
+
 
 def main() -> StatusCode:
     try:
@@ -213,6 +221,7 @@ def main() -> StatusCode:
     except Exception as e:
         print_error(e)
         raise e
+
 
 if __name__ == "__main__":
     exit(main())

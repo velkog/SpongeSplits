@@ -5,6 +5,12 @@
 # For more details, please check https://github.com/bazelbuild/bazel/issues/18958
 ###############################################################################
 
+# https://github.com/aspect-build/rules_lint/releases
+bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
+
+# https://github.com/bazelbuild/bazel-skylib/releases
+bazel_dep(name = "bazel_skylib", version = "1.5.0")
+
 # Hedron's Compile Commands Extractor for Bazel
 # https://github.com/hedronvision/bazel-compile-commands-extractor
 bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
@@ -24,6 +30,3 @@ pip.parse(
     requirements_lock = "requirements_lock.txt",
 )
 use_repo(pip, "pip")
-
-# https://github.com/aspect-build/rules_lint/releases
-bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
