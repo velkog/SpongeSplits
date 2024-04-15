@@ -1,26 +1,21 @@
 name: Code Format Check
 run-name: Format evaluation on ${{ github.ref }} with ${{ github.sha }}
-
 on:
   pull_request:
     branches: [main]
   push:
     branches: [main]
-    
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-
       - uses: bazelbuild/setup-bazelisk@v3
-
-      - name: Mount bazel cache  # Optional
+      - name: Mount bazel cache # Optional
         uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
           key: bazel
-
       - name: Run format check
         run: bazel run //tools/format:clang_format
