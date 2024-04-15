@@ -51,9 +51,9 @@ LANGUAGE_EXTENSIONS = {
     ]
 }
 
-class LintFile:
+class FormatFile:
     errs: Optional[List[str]] = None
-    is_linted: bool = False
+    is_formatted: bool = False
     original: Optional[List[str]] = None
     reformatted: Optional[List[str]] = None
 
@@ -62,15 +62,15 @@ class LintFile:
         with open(file_name, "r", encoding="utf-8") as f:
             self.original = f.readlines()
 
-    def require_linted(func: Callable):
+    def require_formatted(func: Callable):
         def wrapper(self, *args, **kwargs):
-            if self.is_linted:
+            if self.is_formatted:
                 return func(self, *args, **kwargs)
             else:
-                raise ValueError(f"File '{self.file}' must be linted before calling '{func.__name__}'.")
+                raise ValueError(f"File '{self.file}' must be formatted before calling '{func.__name__}'.")
         return wrapper
 
-    def run_lint(self, exc: str, in_place: bool) -> None:
+    def run_format(self, exc: str, in_place: bool) -> None:
         command = [exc, self.file]
 
         if in_place:
@@ -97,9 +97,9 @@ class LintFile:
             self.reformatted = list(proc.stdout.readlines())
 
         self.errs = list(proc.stderr.readlines())
-        self.is_linted: bool = True
+        self.is_formatted: bool = True
 
-    @require_linted
+    @require_formatted
     def get_diff(self) -> Generator[str, None, None]:
         return unified_diff(
             self.original,
@@ -129,16 +129,16 @@ def parse_args() -> None:
         choices=Languages.get_all_options(),
         required=True)
     parser.add_argument(
-        "--lint-executable",
+        "--format-executable",
         metavar="EXECUTABLE",
-        help="path to the lint executable",
+        help="path to the format executable",
         required=True)
     parser.add_argument("paths", metavar="path", nargs="+")
     return parser.parse_args()
 
 def validate_args(args: Namespace) -> None:
-    if not which(args.lint_executable):
-        raise NameError(f"Given executable '{args.lint_executable}' does not exist.")
+    if not which(args.format_executable):
+        raise NameError(f"Given executable '{args.format_executable}' does not exist.")
     
     for files_path in args.paths:
         full_path = path.join(WORKING_DIR, files_path)
@@ -178,22 +178,22 @@ def get_paths_files(paths: List[str], language: str) -> List[str]:
         
     return files
 
-def run_lint(exc: str, in_place: bool, file: str) -> LintFile:
-    lint_file = LintFile(file)
-    status = lint_file.run_lint(exc, in_place)
-    return lint_file
+def run_format(exc: str, in_place: bool, file: str) -> FormatFile:
+    format_file = FormatFile(file)
+    status = format_file.run_format(exc, in_place)
+    return format_file
 
-def run(exc: str, language: str, in_place: bool, paths: List[str]) -> List[LintFile]:
+def run(exc: str, language: str, in_place: bool, paths: List[str]) -> List[FormatFile]:
     files = get_paths_files(paths, language)
     num_pools = min(cpu_count() + 1, len(files))
 
     with Pool(num_pools) as pool:
-        linted_files = [file for file in pool.imap_unordered(partial(run_lint, exc, in_place), files)]
-    return linted_files
+        formatted_files = [file for file in pool.imap_unordered(partial(run_format, exc, in_place), files)]
+    return formatted_files
 
-def report(linted_files: List[LintFile]) -> StatusCode:
+def report(formatted_files: List[FormatFile]) -> StatusCode:
     status = StatusCode.OK
-    for file in linted_files:
+    for file in formatted_files:
         diff = [f for f in file.get_diff()]
         print_diff(diff)
 
@@ -206,8 +206,8 @@ def main() -> StatusCode:
     try:
         args = parse_args()
         validate_args(args)
-        linted_files = run(args.lint_executable, args.language, args.in_place, args.paths)
-        status = report(linted_files)
+        formatted_files = run(args.format_executable, args.language, args.in_place, args.paths)
+        status = report(formatted_files)
         return status.value
 
     except Exception as e:
