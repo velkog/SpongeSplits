@@ -17,7 +17,6 @@ git_override(
 
 # https://github.com/bazelbuild/rules_python/releases
 bazel_dep(name = "rules_python", version = "0.31.0")
-
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
     hub_name = "pip",
@@ -25,3 +24,6 @@ pip.parse(
     requirements_lock = "requirements_lock.txt",
 )
 use_repo(pip, "pip")
+
+# https://github.com/aspect-build/rules_lint/releases
+bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
