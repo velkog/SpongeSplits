@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
 jobs:
-  test:
+  validate_format:
     runs-on: ubuntu-latest
     steps:
       - name: Install libncurses5 # https://github.com/aspect-build/rules_lint/blob/main/example/tools/format/BUILD.bazel#L74
@@ -20,8 +20,6 @@ jobs:
           path: "~/.cache/bazel"
           key: bazel
       - name: Check C++ Format
-        run: |
-          bazel run //tools/format:clang_format
-          bazel run //tools/format:format_test_C++_with_clang-format
+        run: bazel run //tools/format:format_test_C++_with_clang-format
       - name: Check Python Format
         run: bazel run //tools/format:format_test_Python_with_ruff
