@@ -9,17 +9,22 @@
 bazel_dep(name = "aspect_rules_lint", version = "0.18.0")
 
 # https://github.com/bazelbuild/bazel-skylib/releases
-bazel_dep(name = "bazel_skylib", version = "1.5.0")
+bazel_dep(name = "bazel_skylib", version = "1.7.1")
 
-# Hedron's Compile Commands Extractor for Bazel
-# https://github.com/hedronvision/bazel-compile-commands-extractor
-bazel_dep(name = "hedron_compile_commands", dev_dependency = True)
+# https://github.com/bazel-contrib/toolchains_llvm/releases
+bazel_dep(name = "toolchains_llvm", version = "v1.1.2")
 git_override(
-    module_name = "hedron_compile_commands",
-    remote = "https://github.com/hedronvision/bazel-compile-commands-extractor.git",
-    commit = "a14ad3a64e7bf398ab48105aaa0348e032ac87f8",
-    # Even better, set up Renovate and let it do the work for you (see "Suggestion: Updates" in the README).
+  module_name = "toolchains_llvm",
+  commit = "e0ffa169a2572e9f35a52de60fe746831d1e2a0a",
+  remote = "https://github.com/bazel-contrib/toolchains_llvm",
 )
+llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
+llvm.toolchain(
+   llvm_version = "16.0.0",
+)
+use_repo(llvm, "llvm_toolchain")
+use_repo(llvm, "llvm_toolchain_llvm")
+register_toolchains("@llvm_toolchain//:all")
 
 # https://github.com/bazelbuild/rules_python/releases
 bazel_dep(name = "rules_python", version = "0.31.0")
@@ -30,12 +35,3 @@ pip.parse(
     requirements_lock = "requirements_lock.txt",
 )
 use_repo(pip, "pip")
-
-# https://github.com/bazel-contrib/toolchains_llvm/releases
-bazel_dep(name = "toolchains_llvm", version = "1.0.0")
-llvm = use_extension("@toolchains_llvm//toolchain/extensions:llvm.bzl", "llvm")
-llvm.toolchain(
-   llvm_version = "16.0.0",
-)
-use_repo(llvm, "llvm_toolchain")
-use_repo(llvm, "llvm_toolchain_llvm")
