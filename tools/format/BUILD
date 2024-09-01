@@ -1,10 +1,14 @@
 load("@aspect_rules_lint//format:defs.bzl", "format_multirun", "format_test")
 
+# format_multirun(
+#     name = "format",
+#     cc = "@llvm_toolchain_llvm//:bin/clang-format",
+#     python = "//tools/lint:ruff",
+#     visibility = ["//visibility:public"],
+# )
+
 format_multirun(
     name = "format",
-    cc = "@llvm_toolchain_llvm//:bin/clang-format",
-    python = "//tools/lint:ruff",
-    visibility = ["//visibility:public"],
 )
 
 format_test(
