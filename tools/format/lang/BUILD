@@ -3,5 +3,8 @@ py_library(
     srcs = [
         "language.py",
     ],
+    deps = [
+        "@rules_python//python/runfiles",
+    ],
     visibility = ["//visibility:public"],
 )

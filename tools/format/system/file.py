@@ -1,7 +1,7 @@
 from difflib import unified_diff
+from os import environ
 from pathlib import Path
 from typing import Generator, List, Optional
-from os import environ
 
 class File:
     errs: Optional[List[str]] = None

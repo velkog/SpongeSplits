@@ -6,11 +6,10 @@ from pathlib import Path
 from subprocess import Popen, PIPE, list2cmdline
 from sys import exit
 from typing import Generator, List
-from fnmatch import fnmatch
 
 from python.runfiles import Runfiles
 
-from tools.format.lang.language import ILanguage, CPP
+from tools.format.lang.language import ILanguage, ALL_LANGUAGES, Python
 from tools.format.system.file import File
 from tools.format.system.print import print_diff, print_error
 
@@ -45,37 +44,29 @@ def get_all_files(base_dirs: List[str], language: ILanguage) -> List[File]:
 
     return all_files
 
-def run_format(args: Namespace) -> List[Generator]:
+def run_format(args: Namespace) -> List[Generator|List[str]]:
     env = {}
     r = Runfiles.Create()
     env.update(r.EnvVars())
 
-    language = CPP
-    all_files = get_all_files(args.dirs, language)
+    all_diffs = []
+    for language in ALL_LANGUAGES:
+        all_files = get_all_files(args.dirs, language)
 
-    all_diffs = set()
-    for file in all_files:
-        runfile_location = r.Rlocation(language.formatter_directory())
-        assert runfile_location and Path(runfile_location).exists()
+        for file in all_files:
+            cmd = language.formatter_cmd(file, args.in_place)
+            process = Popen(cmd, env=env, stdout = PIPE, stderr = PIPE, universal_newlines=True)
+            process.wait()
 
-        cmds = [runfile_location, str(file)]
-        if args.in_place:
-            cmds.append("-i")
-    
-        process = Popen(cmds, env=env, stdout = PIPE, stderr = PIPE, universal_newlines=True)
-        process.wait()
-
-        if process.returncode:
-            err_str = f"Command '{list2cmdline(cmds)}' returned non-zero exit status {process.returncode}."
-            for err in process.stderr.readlines():
-                err_str += "\n" + err
-            raise SystemError(err_str)
-            
-        all_diffs.add(file.diff(process.stdout.readlines()))
+            if language == Python:
+                # Python's Ruff formatter already formats as a diff
+                all_diffs.append(process.stdout.readlines())
+            else:
+                all_diffs.append(file.diff(process.stdout.readlines()))
     
     return all_diffs
 
-def report(args: Namespace, diffs = List[Generator]) -> bool:
+def report(args: Namespace, diffs = List[Generator|List[str]]) -> bool:
     success = True
     if args.in_place:
         logging.info(f"{len(diffs)} files are properly formatted.")
