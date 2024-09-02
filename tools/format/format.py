@@ -55,10 +55,10 @@ def run_format(args: Namespace) -> List[Generator | List[str]]:
             if formatter_interface == RuffFormat:
                 # Python's Ruff formatter already formats as a diff
                 all_diffs.append(stdout)
-            if formatter_interface == RuffLint:
+            elif formatter_interface == RuffLint:
                 all_diffs.append([] if "All checks passed!" in stdout[0] else stdout)
             else:
-                all_diffs.append(file.diff(process.stdout.readlines()))
+                all_diffs.append(file.diff(stdout))
 
     return all_diffs
 
