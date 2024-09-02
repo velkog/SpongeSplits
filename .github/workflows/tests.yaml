@@ -6,7 +6,7 @@ on:
   push:
     branches: [main]
 jobs:
-  validate_format:
+  unit_tests:
     runs-on: windows-latest
     steps:
       - name: Check out code
