@@ -9,7 +9,7 @@ from typing import Generator, List
 
 from python.runfiles import Runfiles
 
-from tools.format.lang.language import ILanguage, ALL_LANGUAGES, Python
+from tools.format.system.formatter import IFormatter, ALL_FORMATTERS, RuffFormat, RuffLint
 from tools.format.system.file import File
 from tools.format.system.print import print_diff, print_error
 
@@ -22,7 +22,7 @@ def parse_args() -> Namespace:
     return args
 
 
-def get_all_files(base_dirs: List[str], language: ILanguage) -> List[File]:
+def get_all_files(base_dirs: List[str], formatter_interface: IFormatter) -> List[File]:
     working_dir = Path(environ["BUILD_WORKING_DIRECTORY"])
     assert working_dir.exists()
 
@@ -31,7 +31,7 @@ def get_all_files(base_dirs: List[str], language: ILanguage) -> List[File]:
         full_path = Path(working_dir, base_dir)
         assert full_path.exists()
 
-        for file_glob in language.assoc_files():
+        for file_glob in formatter_interface.assoc_files():
             all_files.extend([File(file_path) for file_path in full_path.rglob(file_glob) if file_path.is_file()])
 
     return all_files
@@ -43,18 +43,21 @@ def run_format(args: Namespace) -> List[Generator | List[str]]:
     env.update(r.EnvVars())
 
     all_diffs = []
-    for language in ALL_LANGUAGES:
-        all_files = get_all_files(args.dirs, language)
+    for formatter_interface in ALL_FORMATTERS:
+        all_files = get_all_files(args.dirs, formatter_interface)
 
         for file in all_files:
-            cmd = language.formatter_cmd(file, args.in_place)
+            cmd = formatter_interface.formatter_cmd(file, args.in_place)
             logging.debug(f"Fomatting {file}")
             process = Popen(cmd, env=env, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             process.wait()
 
-            if language == Python:
+            stdout = process.stdout.readlines()
+            if formatter_interface == RuffFormat:
                 # Python's Ruff formatter already formats as a diff
-                all_diffs.append(process.stdout.readlines())
+                all_diffs.append(stdout)
+            if formatter_interface == RuffLint:
+                all_diffs.append([] if "All checks passed!" in stdout[0] else stdout)
             else:
                 all_diffs.append(file.diff(process.stdout.readlines()))
 
@@ -63,12 +66,15 @@ def run_format(args: Namespace) -> List[Generator | List[str]]:
 
 def report(args: Namespace, diffs=List[Generator | List[str]]) -> bool:
     success = True
-    if args.in_place:
-        logging.info(f"{len(diffs)} files are properly formatted.")
-    else:
+
+    if not args.in_place:
         for diff in diffs:
             if not print_diff(diff):
                 success = False
+
+    if success:
+        logging.info(f"{len(diffs)} files are properly formatted.")
+
     return success
 
 

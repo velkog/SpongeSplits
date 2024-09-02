@@ -5,12 +5,12 @@ from typing import List
 from python.runfiles import Runfiles
 
 
-class ILanguage(ABC):
+class IFormatter(ABC):
     @staticmethod
     @abstractmethod
     def assoc_files() -> set[str]:
         """
-        A property that should return a list of valid files for this language.
+        A property that should return a list of valid files for this formatter.
         """
         pass
 
@@ -18,7 +18,7 @@ class ILanguage(ABC):
     @abstractmethod
     def formatter_directory() -> Path:
         """
-        A property that should return the path to the directory where formatters are stored.
+        A property that should return the path to the directory where the formatter is stored.
         """
         pass
 
@@ -26,12 +26,12 @@ class ILanguage(ABC):
     @abstractmethod
     def formatter_cmd(cls, file: Path, in_place: bool) -> List[str]:
         """
-        A property that should return the list arguments passed to the formatter.
+        A property that should return the command list to execute the formatter
         """
         pass
 
 
-class CPP(ILanguage):
+class ClangFormat(IFormatter):
     @staticmethod
     def assoc_files() -> set[str]:
         return {
@@ -63,7 +63,7 @@ class CPP(ILanguage):
         return cmd
 
 
-class Python(ILanguage):
+class RuffFormat(IFormatter):
     @staticmethod
     def assoc_files() -> set[str]:
         return {
@@ -90,4 +90,20 @@ class Python(ILanguage):
         return cmds
 
 
-ALL_LANGUAGES = [CPP, Python]
+class RuffLint(RuffFormat):
+    @staticmethod
+    def assoc_files() -> set[str]:
+        return {
+            "*.py",
+        }
+
+    @classmethod
+    def formatter_cmd(cls, file: Path, in_place: bool) -> List[str]:
+        cmds = [cls.formatter_directory(), "check", str(file)]
+        if in_place:
+            cmds.append("--fix")
+        return cmds
+
+
+# ALL_FORMATTERS = [ClangFormat, RuffFormat, RuffLint]
+ALL_FORMATTERS = [RuffLint]

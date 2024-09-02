@@ -13,7 +13,7 @@ py_binary(
     ],
     deps=[
         "@rules_python//python/runfiles",
-        "//tools/format/lang:languages",
+        "//tools/format/system:formatters",
         "//tools/format/system:file",
         "//tools/format/system:print",
     ],
