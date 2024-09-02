@@ -7,19 +7,15 @@ on:
     branches: [main]
 jobs:
   validate_format:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
-      - name: Install libncurses5 # https://github.com/aspect-build/rules_lint/blob/main/example/tools/format/BUILD.bazel#L74
-        run: sudo apt-get install libncurses5
       - name: Check out code
         uses: actions/checkout@v4
       - uses: bazelbuild/setup-bazelisk@v3
-      - name: Mount bazel cache # Optional
+      - name: Mount bazel cache
         uses: actions/cache@v4
         with:
           path: "~/.cache/bazel"
           key: bazel
-      - name: Check C++ Format
-        run: bazel run //tools/format:format_test_C++_with_clang-format
-      - name: Check Python Format
-        run: bazel run //tools/format:format_test_Python_with_ruff
+      - name: Check Code Format
+        run: bazel run format
