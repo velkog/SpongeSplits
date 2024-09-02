@@ -1,16 +1,15 @@
 import logging
-
 from argparse import ArgumentParser, Namespace
 from os import environ
 from pathlib import Path
-from subprocess import Popen, PIPE, list2cmdline
+from subprocess import PIPE, Popen, list2cmdline
 from sys import exit
 from typing import Generator, List
 
 from python.runfiles import Runfiles
 
-from tools.format.system.formatter import IFormatter, ALL_FORMATTERS, RuffFormat, RuffLint
 from tools.format.system.file import File
+from tools.format.system.formatter import ALL_FORMATTERS, IFormatter, RuffFormat, RuffLint
 from tools.format.system.print import print_diff, print_error
 
 

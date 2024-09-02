@@ -105,5 +105,4 @@ class RuffLint(RuffFormat):
         return cmds
 
 
-# ALL_FORMATTERS = [ClangFormat, RuffFormat, RuffLint]
-ALL_FORMATTERS = [RuffLint]
+ALL_FORMATTERS = [ClangFormat, RuffFormat, RuffLint]
