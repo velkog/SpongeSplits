@@ -1,0 +1,15 @@
+cc_library(
+    name="win_capture_engine",
+    srcs=[
+        "win_capture_engine.cpp",
+        "win_capture_engine.hpp",
+    ],
+    deps=[
+        "//autosplit/capture:capture_engine",
+        "//autosplit/config:config",
+    ],
+    linkopts=[
+        "-DEFAULTLIB:user32.lib",
+    ],
+    visibility=["//visibility:public"],
+)

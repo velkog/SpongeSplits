@@ -28,7 +28,6 @@ def install_ruff(ruff_version, platform):
     http_archive(
         name="ruff",
         urls=[url],
-        # strip_prefix = release_name,
         sha256=_RUFF_DISTRIBUTIONS[release_name],
         build_file="@//toolchain/ruff:ruff.BUILD",
     )

@@ -1,10 +1,20 @@
 #include <iostream>
 
-int main()
+#include "autosplit/capture/capture_engine.hpp"
+#include "autosplit/capture/win/win_capture_engine.hpp"
+#include "autosplit/config/config.hpp"
 
-{
-  std::cout << "Hello, world!" << std::endl;
+int main(int argc, char **argv) {
+  config::initialize(argc, argv);
 
-  __attribute__((unused)) int y = 10;
+  const capture::win::WinCaptureEngine winCapEng;
+  const capture::ICaptureEngine &captureEngine = winCapEng;
+
+  auto windows = captureEngine.enumerateWindows();
+
+  for (const auto &[key, val] : windows) {
+    std::cout << key << ": " << val << std::endl;
+  }
+
   return 0;
 }

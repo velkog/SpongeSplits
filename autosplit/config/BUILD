@@ -1,0 +1,15 @@
+cc_library(
+    name="config",
+    srcs=[
+        "config.cpp",
+        "config.hpp",
+    ],
+    data=[
+        "//config:config_yamls",
+    ],
+    deps=[
+        "@bazel_tools//tools/cpp/runfiles",
+        "@yaml-cpp//:yaml-cpp",
+    ],
+    visibility=["//visibility:public"],
+)

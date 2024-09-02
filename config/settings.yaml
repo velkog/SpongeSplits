@@ -1,0 +1,9 @@
+IGNORED_WINDOWS:
+  - Discord
+  - Google Chrome
+  - Settings
+  - Microsoft Text Input Application
+  - NVIDIA GeForce Overlay
+  - powershell.exe
+  - Program Manager
+  - Visual Studio Code

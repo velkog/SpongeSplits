@@ -1,6 +1,11 @@
 cc_binary(
-    name="hello_world",
+    name="main",
     srcs=[
         "main.cpp",
+    ],
+    deps=[
+        "//autosplit/capture:capture_engine",
+        "//autosplit/capture/win:win_capture_engine",
+        "//autosplit/config:config",
     ],
 )
