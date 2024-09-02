@@ -1,5 +1,6 @@
 # SpongeSplits
 ![Code Format](https://github.com/velkog/SpongeSplits/actions/workflows/format.yaml/badge.svg?branch=main)
+![Unit Tests](https://github.com/velkog/SpongeSplits/actions/workflows/unit_tests.yaml/badge.svg?branch=main)
 
 Attempt #4 to create a BfBB Autosplitter
 
