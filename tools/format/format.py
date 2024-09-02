@@ -1,7 +1,7 @@
 import logging
 
 from argparse import ArgumentParser, Namespace
-from os import environ, path
+from os import environ
 from pathlib import Path
 from subprocess import Popen, PIPE, list2cmdline
 from sys import exit
@@ -56,7 +56,7 @@ def run_format(args: Namespace) -> List[Generator]:
     all_diffs = set()
     for file in all_files:
         runfile_location = r.Rlocation(language.formatter_directory())
-        assert runfile_location and path.exists(runfile_location)
+        assert runfile_location and Path(runfile_location).exists()
 
         cmds = [runfile_location, str(file)]
         if args.in_place:
@@ -70,23 +70,27 @@ def run_format(args: Namespace) -> List[Generator]:
             for err in process.stderr.readlines():
                 err_str += "\n" + err
             raise SystemError(err_str)
-        
+            
         all_diffs.add(file.diff(process.stdout.readlines()))
     
     return all_diffs
 
-def report(args: Namespace, diffs = List[Generator]) -> None:
+def report(args: Namespace, diffs = List[Generator]) -> bool:
+    success = True
     if args.in_place:
         logging.info(f"{len(diffs)} files are properly formatted.")
     else:
         for diff in diffs:
-            print_diff(diff)
+            if not print_diff(diff):
+                success = False
+    return success
 
 
-def main() -> None:
+def main() -> int:
     args = parse_args()
     diffs = run_format(args)
-    report(args, diffs)
+    success = report(args, diffs)
+    return 0 if success else 1
 
 
 if __name__ == "__main__":
@@ -94,7 +98,8 @@ if __name__ == "__main__":
         datefmt="%H:%M:%S",
         level=logging.INFO)
     try:
-        main()
+        status = main()
+        exit(status)
     except Exception as e:
         print_error(e)
         raise e
