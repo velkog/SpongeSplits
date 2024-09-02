@@ -1,0 +1,10 @@
+cc_test(
+    name="config_test",
+    size="small",
+    srcs=["config_test.cpp"],
+    deps=[
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "//autosplit/config:config",
+    ],
+)

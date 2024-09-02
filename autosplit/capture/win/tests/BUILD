@@ -1,0 +1,13 @@
+cc_test(
+    name="win_capture_engine_tests",
+    size="small",
+    srcs=["win_capture_engine_tests.cpp"],
+    deps=[
+        "@googletest//:gtest",
+        "@googletest//:gtest_main",
+        "//autosplit/capture/win:win_capture_engine",
+    ],
+    linkopts=[
+        "-DEFAULTLIB:user32.lib",
+    ],
+)

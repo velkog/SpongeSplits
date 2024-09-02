@@ -14,3 +14,6 @@ pip.parse(
     requirements_lock = "requirements_lock.txt",
 )
 use_repo(pip, "pip_deps")
+
+# https://registry.bazel.build/modules/googletest
+bazel_dep(name = "googletest", version = "1.15.2")
