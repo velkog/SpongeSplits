@@ -1,20 +1,20 @@
 load("@pip_deps//:requirements.bzl", "requirement")
 
 py_library(
-    name = "file",
-    srcs = [
+    name="file",
+    srcs=[
         "file.py",
     ],
-    visibility = ["//visibility:public"],
+    visibility=["//visibility:public"],
 )
 
 py_library(
-    name = "print",
-    srcs = [
+    name="print",
+    srcs=[
         "print.py",
     ],
-    deps = [
+    deps=[
         requirement("termcolor"),
     ],
-    visibility = ["//visibility:public"],
+    visibility=["//visibility:public"],
 )

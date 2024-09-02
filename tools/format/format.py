@@ -16,19 +16,11 @@ from tools.format.system.print import print_diff, print_error
 
 def parse_args() -> Namespace:
     parser = ArgumentParser()
-    parser.add_argument(
-        "--in-place",
-        "-i",
-        help="Inplace edit <file>s, if specified.",
-        action="store_true"
-    )
-    parser.add_argument(
-        "dirs",
-        nargs="+", 
-        help="List of files to format."
-    )
+    parser.add_argument("--in-place", "-i", help="Inplace edit <file>s, if specified.", action="store_true")
+    parser.add_argument("dirs", nargs="+", help="List of files to format.")
     args = parser.parse_args()
     return args
+
 
 def get_all_files(base_dirs: List[str], language: ILanguage) -> List[File]:
     working_dir = Path(environ["BUILD_WORKING_DIRECTORY"])
@@ -44,7 +36,8 @@ def get_all_files(base_dirs: List[str], language: ILanguage) -> List[File]:
 
     return all_files
 
-def run_format(args: Namespace) -> List[Generator|List[str]]:
+
+def run_format(args: Namespace) -> List[Generator | List[str]]:
     env = {}
     r = Runfiles.Create()
     env.update(r.EnvVars())
@@ -55,7 +48,8 @@ def run_format(args: Namespace) -> List[Generator|List[str]]:
 
         for file in all_files:
             cmd = language.formatter_cmd(file, args.in_place)
-            process = Popen(cmd, env=env, stdout = PIPE, stderr = PIPE, universal_newlines=True)
+            logging.debug(f"Fomatting {file}")
+            process = Popen(cmd, env=env, stdout=PIPE, stderr=PIPE, universal_newlines=True)
             process.wait()
 
             if language == Python:
@@ -63,10 +57,11 @@ def run_format(args: Namespace) -> List[Generator|List[str]]:
                 all_diffs.append(process.stdout.readlines())
             else:
                 all_diffs.append(file.diff(process.stdout.readlines()))
-    
+
     return all_diffs
 
-def report(args: Namespace, diffs = List[Generator|List[str]]) -> bool:
+
+def report(args: Namespace, diffs=List[Generator | List[str]]) -> bool:
     success = True
     if args.in_place:
         logging.info(f"{len(diffs)} files are properly formatted.")
@@ -85,13 +80,14 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format="[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)d] %(message)s",
+    logging.basicConfig(
+        format="[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)d] %(message)s",
         datefmt="%H:%M:%S",
-        level=logging.INFO)
+        level=logging.INFO,
+    )
     try:
         status = main()
         exit(status)
     except Exception as e:
         print_error(e)
         raise e
-    

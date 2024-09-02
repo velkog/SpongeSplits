@@ -4,6 +4,7 @@ from typing import List
 
 from python.runfiles import Runfiles
 
+
 class ILanguage(ABC):
     @staticmethod
     @abstractmethod
@@ -12,7 +13,7 @@ class ILanguage(ABC):
         A property that should return a list of valid files for this language.
         """
         pass
-    
+
     @staticmethod
     @abstractmethod
     def formatter_directory() -> Path:
@@ -29,6 +30,7 @@ class ILanguage(ABC):
         """
         pass
 
+
 class CPP(ILanguage):
     @staticmethod
     def assoc_files() -> set[str]:
@@ -44,7 +46,7 @@ class CPP(ILanguage):
             "*.hpp",
             "*.hxx",
         }
-    
+
     @staticmethod
     def formatter_directory() -> Path:
         relative_path = "llvm_tools/bin/clang-format.exe"
@@ -52,13 +54,14 @@ class CPP(ILanguage):
         runfile_location = r.Rlocation(relative_path)
         assert runfile_location and Path(runfile_location).exists()
         return runfile_location
-    
+
     @classmethod
     def formatter_cmd(cls, file: Path, in_place: bool) -> List[str]:
         cmd = [cls.formatter_directory(), str(file)]
         if in_place:
             cmd.append("-i")
         return cmd
+
 
 class Python(ILanguage):
     @staticmethod
@@ -70,7 +73,7 @@ class Python(ILanguage):
             "*.bzl",
             "*.bazel",
         }
-    
+
     @staticmethod
     def formatter_directory() -> Path:
         relative_path = "ruff/ruff.exe"
@@ -78,12 +81,13 @@ class Python(ILanguage):
         runfile_location = r.Rlocation(relative_path)
         assert runfile_location and Path(runfile_location).exists()
         return runfile_location
-    
+
     @classmethod
     def formatter_cmd(cls, file: Path, in_place: bool) -> List[str]:
         cmds = [cls.formatter_directory(), "format", str(file)]
         if not in_place:
             cmds.append("--diff")
         return cmds
+
 
 ALL_LANGUAGES = [CPP, Python]

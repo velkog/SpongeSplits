@@ -3,6 +3,7 @@ from os import environ
 from pathlib import Path
 from typing import Generator, List, Optional
 
+
 class File:
     errs: Optional[List[str]] = None
     is_linted: bool = False

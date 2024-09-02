@@ -1,10 +1,10 @@
 py_library(
-    name = "languages",
-    srcs = [
+    name="languages",
+    srcs=[
         "language.py",
     ],
-    deps = [
+    deps=[
         "@rules_python//python/runfiles",
     ],
-    visibility = ["//visibility:public"],
+    visibility=["//visibility:public"],
 )

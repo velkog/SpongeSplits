@@ -5,18 +5,18 @@ FORMAT_PATHS = [
 ]
 
 py_binary(
-    name = "format",
-    srcs = ["format.py"],
-    data = [
+    name="format",
+    srcs=["format.py"],
+    data=[
         "@llvm_tools//:clang_format",
         "@ruff//:ruff",
     ],
-    deps = [
+    deps=[
         "@rules_python//python/runfiles",
         "//tools/format/lang:languages",
         "//tools/format/system:file",
         "//tools/format/system:print",
     ],
-    visibility = ["//visibility:public"],
-    args = FORMAT_PATHS,
+    visibility=["//visibility:public"],
+    args=FORMAT_PATHS,
 )
