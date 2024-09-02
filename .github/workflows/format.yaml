@@ -11,11 +11,10 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v4
-      - uses: bazelbuild/setup-bazelisk@v3
-      - name: Mount bazel cache
-        uses: actions/cache@v4
+      - uses: bazel-contrib/setup-bazel@0.8.5
         with:
-          path: "~/.cache/bazel"
-          key: bazel
+          bazelisk-cache: true
+          disk-cache: ${{ github.workflow }}
+          repository-cache: true
       - name: Check Code Format
         run: bazel run format
