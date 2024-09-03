@@ -5,10 +5,12 @@ cc_library(
         "win_capture_engine.hpp",
     ],
     deps=[
+        "@com_github_google_glog//:glog",
         "//autosplit/capture:capture_engine",
         "//autosplit/config:config",
     ],
     linkopts=[
+        "-DEFAULTLIB:gdi32.lib",
         "-DEFAULTLIB:user32.lib",
     ],
     visibility=["//visibility:public"],

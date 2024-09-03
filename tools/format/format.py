@@ -47,11 +47,11 @@ def run_format(args: Namespace) -> List[Generator | List[str]]:
 
         for file in all_files:
             cmd = formatter_interface.formatter_cmd(file, args.in_place)
-            logging.debug(f"Fomatting {file}")
-            process = Popen(cmd, env=env, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-            process.wait()
+            logging.debug(f"Fomatting {file} with cmd: '{list2cmdline(cmd)}'")
+            process = Popen(cmd, stdout=PIPE, universal_newlines=True)
+            stdout, _stderr = process.communicate()
+            stdout = stdout.splitlines()
 
-            stdout = process.stdout.readlines()
             if formatter_interface == RuffFormat:
                 # Python's Ruff formatter already formats as a diff
                 all_diffs.append(stdout)

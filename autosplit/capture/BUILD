@@ -5,3 +5,12 @@ cc_library(
     ],
     visibility=["//visibility:public"],
 )
+
+cc_library(
+    name="frame",
+    srcs=[
+        "frame.cpp",
+        "frame.hpp",
+    ],
+    visibility=["//visibility:public"],
+)

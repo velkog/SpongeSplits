@@ -1,2 +1,1 @@
-build --action_env=BAZEL_CXXOPTS="-std=c++23"
-build --cxxopt=-Wno-c++17-extensions
+build --cxxopt=/std:c++20

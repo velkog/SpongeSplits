@@ -4,8 +4,10 @@ cc_binary(
         "main.cpp",
     ],
     deps=[
+        "@com_github_google_glog//:glog",
         "//autosplit/capture:capture_engine",
         "//autosplit/capture/win:win_capture_engine",
         "//autosplit/config:config",
     ],
+    args=[],
 )

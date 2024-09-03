@@ -21,7 +21,6 @@ TEST_F(WinCaptureEngineTest, EnumerateWindows_IncludesOnlyVisibleWindows) {
   auto windows = engine.enumerateWindows();
 
   for (const auto& window : windows) {
-    HWND hwnd = reinterpret_cast<HWND>(std::stoul(window.first, nullptr, 16));
-    EXPECT_TRUE(IsWindowVisible(hwnd));
+    EXPECT_TRUE(IsWindowVisible(engine.hexStringToHWND(window.first)));
   }
 }
