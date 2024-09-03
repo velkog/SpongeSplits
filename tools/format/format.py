@@ -88,7 +88,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         format="[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)d] %(message)s",
         datefmt="%H:%M:%S",
-        level=logging.DEBUG,
+        level=logging.INFO,
     )
     try:
         status = main()
