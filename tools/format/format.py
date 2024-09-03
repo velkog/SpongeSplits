@@ -50,8 +50,8 @@ def run_format(args: Namespace) -> List[Generator | List[str]]:
             logging.debug(f"Fomatting {file} with cmd: '{list2cmdline(cmd)}'")
             process = Popen(cmd, stdout=PIPE, universal_newlines=True)
             stdout, _stderr = process.communicate()
-            stdout = stdout.splitlines()
 
+            stdout = [line + "\n" for line in stdout.splitlines()]
             if formatter_interface == RuffFormat:
                 # Python's Ruff formatter already formats as a diff
                 all_diffs.append(stdout)
@@ -88,7 +88,7 @@ if __name__ == "__main__":
     logging.basicConfig(
         format="[%(asctime)s][%(levelname)s][%(filename)s:%(lineno)d] %(message)s",
         datefmt="%H:%M:%S",
-        level=logging.INFO,
+        level=logging.DEBUG,
     )
     try:
         status = main()

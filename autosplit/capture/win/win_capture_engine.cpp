@@ -124,15 +124,16 @@ void WinCaptureEngine::captureWindow(std::span<uint8_t>& windowImage) {
   bi.biClrUsed = 0;
   bi.biClrImportant = 0;
 
-  int dwBmpSize =
-      ((bmpWindow.bmWidth * bi.biBitCount + 31) / 32) * 4 * bmpWindow.bmHeight;
+  // int dwBmpSize =
+  //     ((bmpWindow.bmWidth * bi.biBitCount + 31) / 32) * 4 *
+  //     bmpWindow.bmHeight;
 
-  if (!GetDIBits(hdcMem, hBitmap, 0, bmpWindow.bmHeight, buffer.data(),
-                 &bmpInfo, DIB_RGB_COLORS)) {
-    SelectObject(hdcMem, hOldBitmap);
-    DeleteDC(hdcMem);
-    throw std::runtime_error("Failed to get bitmap bits.");
-  }
+  // if (!GetDIBits(hdcMem, hBitmap, 0, bmpWindow.bmHeight, buffer.data(),
+  //                &bmpInfo, DIB_RGB_COLORS)) {
+  //   SelectObject(hdcMem, hOldBitmap);
+  //   DeleteDC(hdcMem);
+  //   throw std::runtime_error("Failed to get bitmap bits.");
+  // }
 
   DeleteObject(hbmWindow);
 }
